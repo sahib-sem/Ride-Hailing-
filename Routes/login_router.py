@@ -27,7 +27,7 @@ async def login_handler(message: Message, state: FSMContext) -> None:
     role = await get_user_role(message.from_user.id)
     await state.clear()
     await state.set_state(Driver.dashboard if role.lower() == 'driver' else Passenger.dashboard)
-    print(await state.get_state())
+   
     dashboard = ReplyKeyboardMarkup(
             keyboard=[
                 [

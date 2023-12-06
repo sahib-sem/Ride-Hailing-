@@ -36,17 +36,17 @@ async def get_ride_history(user_id):
         rows = await cursor.fetchall()
         return rows
 
-async def accept_ride_request(ride_id , user_id, driver_id):
+async def accept_ride_request(ride_id , driver_id):
 
     async with aiosqlite.connect('../ride.db') as db:
 
         await ensure_db_exists()
-        sql_query = 'UPDATE RideRequests SET accepted_status = ? WHERE id = ?'
-        
-        await db.execute(sql_query, ('accepted', ride_id,))
+        sql_query = 'UPDATE RideRequests SET accepted_status = ?, driver_id = ? WHERE id = ?'
+
+        await db.execute(sql_query, ('accepted', driver_id, ride_id,))
         await db.commit()
 
-        name = await get_name(driver_id)
+
 
 
 

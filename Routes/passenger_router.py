@@ -1,6 +1,6 @@
 from aiogram import Router, F, html
 from StatesGroup.Passenger import Passenger
-from Repositories.ride_booking_db import save_ride_request, cancel_ride as cr
+from Repositories.ride_booking_db import save_ride_request, cancel_ride as cr, get_ride_history
 
 from aiogram.fsm.context import FSMContext
 from aiogram.types import (
@@ -58,7 +58,20 @@ async def cancel_ride(message: Message, state: FSMContext) -> None:
     ride_id = user_data.get('ride_id')
     await cr(ride_id)
     await message.answer('Ride cancelled', reply_markup=actions)
-    
+
+@passenger_router.message(F.text.casefold() == "view your rides")
+async def view_ride_history(message: Message, state: FSMContext) -> None:
+    user_id = message.from_user.id
+    user_history = await get_ride_history(user_id)
+    if not user_history:
+        await message.answer('You have no ride history', reply_markup=actions)
+        return
+    reply_message = ''
+    for ride in user_history:
+        reply_messsage += str(ride) + '\n'
+
+    await message.answer(f'Your ride history: \n {reply_message}', reply_markup=actions)
+
 @passenger_router.message(Passenger.BookRide)
 async def book_ride(message: Message, state: FSMContext) -> None:
     

@@ -106,6 +106,17 @@ async def role(message: Message , state: FSMContext) -> None:
     await register_user(message, data)
     await state.set_state(Driver.dashboard if data.get('role').lower() == 'driver' else Passenger.dashboard)
 
+    dashboard = ReplyKeyboardMarkup(
+            keyboard=[
+                [
+                    KeyboardButton(text="dashboard"),
+                ]
+            ],
+            resize_keyboard=True,
+        
+        )
+    await message.answer('press the button to go to your dashboard' , reply_markup=dashboard)
+
 
 
 

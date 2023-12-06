@@ -24,7 +24,7 @@ async def register_user(user_data):
 
     name = user_data.get('name' , 'unknown')
     user_id = user_data.get('id')
-    phone_number = user_data.get('phone_number', 'unknown')
+    phone_number = user_data.get('user_phone_number', 'unknown')
     role = user_data.get('role')
 
 

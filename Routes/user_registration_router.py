@@ -1,6 +1,8 @@
 from typing import Any, Dict
 from aiogram.filters import CommandStart, Command
 from StatesGroup.Registration import Registration
+from StatesGroup.Driver import Driver
+from StatesGroup.Passenger import Passenger
 from aiogram import Router, F, html
 import logging
 from Repositories.user_db import check_user_exists, register_user as register_to_db, unregister_user
@@ -79,7 +81,7 @@ async def process_name(message: Message, state: FSMContext) -> None:
 @registration_router.message(Registration.phone_number)
 async def share_contact_handler(message: Contact , state: FSMContext) -> None:
 
-    user_phone_number = message.contact.phone_number
+    user_phone_number =  message.contact.phone_number
     await state.update_data(user_phone_number = user_phone_number)
     await state.set_state(Registration.role)
     role = ReplyKeyboardMarkup(
@@ -100,7 +102,9 @@ async def role(message: Message , state: FSMContext) -> None:
     role = message.text
     await state.update_data(role = role)
     data = await state.get_data()
+    await state.clear()
     await register_user(message, data)
+    await state.set_state(Driver.dashboard if data.get('role').lower() == 'driver' else Passenger.dashboard)
 
 
 

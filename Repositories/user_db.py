@@ -46,7 +46,28 @@ async def get_user_role(user_id : int):
         
         cursor = await db.execute(sql_query, (user_id,))
         row = await cursor.fetchone() 
-        print(row)
+        if row:
+            return row[0]
+
+        else:
+            return None
+
+async def update_user_name(user_id : int, name : str):
+    async with aiosqlite.connect('../ride.db') as db:
+        await db.execute('UPDATE Users SET name = ? WHERE id = ?', (name, user_id,))
+        await db.commit()
+
+async def update_user_phone_number(user_id : int, phone_number : str):
+    async with aiosqlite.connect('../ride.db') as db:
+        await db.execute('UPDATE Users SET phone_number = ? WHERE id = ?', (phone_number, user_id,))
+        await db.commit()
+
+async def get_name(user_id):
+    async with aiosqlite.connect('../ride.db') as db:
+        sql_query = 'SELECT name FROM Users WHERE id = ?'
+        
+        cursor = await db.execute(sql_query, (user_id,))
+        row = await cursor.fetchone() 
         if row:
             return row[0]
 

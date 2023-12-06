@@ -6,6 +6,8 @@ import aiosqlite
 async def ensure_db_exists():
     async with aiosqlite.connect('../ride.db') as db:
         await db.execute('CREATE TABLE IF NOT EXISTS Users (id INTEGER PRIMARY KEY, name TEXT, phone_number Text, role Text)')
+        await db.execute('CREATE TABLE IF NOT EXISTS RideRequests (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, user_location TEXT, accepted_status TEXT)')
+        await db.commit()
         
 
         
